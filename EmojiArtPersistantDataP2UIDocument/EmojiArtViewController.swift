@@ -230,21 +230,21 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
     }
     
     
-    // To test our app We are going to set my document to be untitled.json eventually it would be chooser thing
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
-        if let url = try? FileManager.default.url(
-            for: .documentDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true).appendingPathComponent("Untitled.json"){
-            
-            //remember that UIDocument only has 1 initializer that is url
-            document = EmojiArtDocument(fileURL: url)
-        }
-    }
+//    // To test our app We are going to set my document to be untitled.json eventually it would be chooser thing
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//        
+//        if let url = try? FileManager.default.url(
+//            for: .documentDirectory,
+//            in: .userDomainMask,
+//            appropriateFor: nil,
+//            create: true).appendingPathComponent("Untitled.json"){
+//            
+//            //remember that UIDocument only has 1 initializer that is url
+//            document = EmojiArtDocument(fileURL: url)
+//        }
+//    }
     @IBOutlet weak var dropZone: UIView! {
         didSet{
             dropZone.addInteraction(UIDropInteraction(delegate: self))
@@ -616,3 +616,12 @@ So lets go to reading everytime it puts its view controller up
  It will just loada the last document we were working on Untitled.json that we where working on
  Let's  do that
   */
+
+
+/*
+ Done with maaking existing app work with UIDocument
+ So UIDocument is doing all stuffs that FileSystem was doing for us
+ But using UIDocument we can have our app launch show the file choosing thing , file broswer thing like files app
+ removing viewDidload because we are not setting the  document = EmojiArtDocument(fileURL: url)
+ because we want to set it to the whatever the document the user chooses
+ */
