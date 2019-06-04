@@ -371,6 +371,9 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
             emojiCollectionView.dragDelegate = self
             
             emojiCollectionView.dropDelegate = self
+            
+            //This is byDefault true on iPad but false on iPhone
+            emojiCollectionView.dragInteractionEnabled = true
         }
     }
     

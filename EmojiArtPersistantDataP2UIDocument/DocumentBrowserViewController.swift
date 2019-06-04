@@ -17,44 +17,58 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         
         delegate = self
         
-        allowsDocumentCreation = true
+        allowsDocumentCreation = false
         
-        //Because we only know showing of 1 emojiArtDocument at a time
-      //  allowsPickingMultipleItems = false
+        // MARK: - Check for iPad
         
-        // Update the style of the UIDocumentBrowserViewController
-        // browserUserInterfaceStyle = .dark
-        // view.tintColor = .white
+        //as we cant create new docs on iPhone as we cant drag from safari in iPhone
+        //So limiting creation of new docs to iPad only
         
-        // Specify the allowed content types of your application via the Info.plist.
-        
-        
-        
-        /*
-        This time not in document Directory
-        I dnt want it on documents when the user looks there
-         I am gonna put it in applicationSupportDirectory
-         applicationSupportDirectory is a great place to put things that are kinda a behind the scenes, they are permanent , I want this template to stick around , I dont want it to cached and deleted
-         Although I can put it in caches because I can always recreate it in viewDidLoad
-    */
-       template = try? FileManager.default.url(
-        for: .applicationSupportDirectory,
-        in: .userDomainMask,
-        appropriateFor: nil,
-        create: true).appendingPathComponent("Untitled.json")
-        
-        if template != nil {
+        // Checking For if device is iPad
+        if UIDevice.current.userInterfaceIdiom == .pad{
+            
+            //Because we only know showing of 1 emojiArtDocument at a time
+            //  allowsPickingMultipleItems = false
+            
+            // Update the style of the UIDocumentBrowserViewController
+            // browserUserInterfaceStyle = .dark
+            // view.tintColor = .white
+            
+            // Specify the allowed content types of your application via the Info.plist.
+            
+            
             
             /*
-             createFile is a nice way to create a file because it doesnt throw or anything like that and it returns a boolean whether that file either got created or already exist
-             And  if it is true then I will allow document creation
-             Otherwise I wouldnt allow document creation because I couldnt create the template
-             Now this importHandler(template, .copy) passing in template and copy it in applicationDirectory
-             
-             Data() creates a blank document
- */
-            allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+             This time not in document Directory
+             I dnt want it on documents when the user looks there
+             I am gonna put it in applicationSupportDirectory
+             applicationSupportDirectory is a great place to put things that are kinda a behind the scenes, they are permanent , I want this template to stick around , I dont want it to cached and deleted
+             Although I can put it in caches because I can always recreate it in viewDidLoad
+             */
+            template = try? FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true).appendingPathComponent("Untitled.json")
+            
+            if template != nil {
+                
+                /*
+                 createFile is a nice way to create a file because it doesnt throw or anything like that and it returns a boolean whether that file either got created or already exist
+                 And  if it is true then I will allow document creation
+                 Otherwise I wouldnt allow document creation because I couldnt create the template
+                 Now this importHandler(template, .copy) passing in template and copy it in applicationDirectory
+                 
+                 Data() creates a blank document
+                 */
+                allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+            }
+            
+            
+            
         }
+        
+
         
     }
     
