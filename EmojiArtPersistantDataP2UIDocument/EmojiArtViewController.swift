@@ -201,6 +201,11 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
         
         save()
         
+        //utility
+        if document?.emojiArt != nil{
+        document?.thumbnail = emojiArtView.snapshot
+        }
+        
         
         dismiss(animated: true){
             //document?.close(completionHandler: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)

@@ -15,6 +15,8 @@ class EmojiArtDocument: UIDocument {
  */
     var emojiArt : EmojiArt?
     
+    var thumbnail : UIImage?
+    
     //data to a model
     //contents(forType typeName: String) throws -> Any return Any not data because this Any can be a file wrapper (a directory full of files) used a way to represent document just as a way data is .
     // but usually it is going to return data infact check default returns a blank Data()
@@ -50,6 +52,23 @@ class EmojiArtDocument: UIDocument {
             
         }
         
+    }
+    
+    
+    //return dictionary of file attributes like is this file hidden
+    override func fileAttributesToWrite(to url: URL, for saveOperation: UIDocument.SaveOperation) throws -> [AnyHashable : Any] {
+        
+        var attributes = try super.fileAttributesToWrite(to: url, for: saveOperation)
+        
+        if let thumbnail = self.thumbnail {
+            
+            attributes[URLResourceKey.thumbnailDictionaryKey] = [URLThumbnailDictionaryItem.NSThumbnail1024x1024SizeKey : thumbnail]
+            
+            //NSThumbnail1024x1024SizeKey any size if too small will use document icon again
+            
+        }
+        
+        return attributes
     }
 }
 
