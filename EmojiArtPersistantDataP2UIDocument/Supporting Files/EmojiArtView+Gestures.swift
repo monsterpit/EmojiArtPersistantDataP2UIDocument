@@ -95,7 +95,7 @@ extension EmojiArtView
     
     @objc func selectAndSendSubviewToBack(by recognizer: UITapGestureRecognizer) {
         if recognizer.state == .ended {
-            if let view = recognizer.view, let index = subviews.index(of: view) {
+            if let view = recognizer.view, let index = subviews.firstIndex(of: view) {
                 selectedSubview = view
                 exchangeSubview(at: 0, withSubviewAt: index)
             }

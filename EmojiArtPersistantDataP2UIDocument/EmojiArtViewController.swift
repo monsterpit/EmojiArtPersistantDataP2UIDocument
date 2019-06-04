@@ -94,7 +94,7 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
             emojiArtBackImage = (nil,nil)
             
             //removing all labels from emojiArtView
-            emojiArtView.subviews.flatMap { $0 as? UILabel   }.forEach { $0.removeFromSuperview()  }
+            emojiArtView.subviews.compactMap { $0 as? UILabel   }.forEach { $0.removeFromSuperview()  }
             
             if let url = newValue?.url {
                 
