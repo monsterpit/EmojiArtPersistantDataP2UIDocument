@@ -202,12 +202,19 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
         save()
         
         
-        //document?.close(completionHandler: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)
-        /*
- It does have a completionHandler but I dont really care because I am not gonna do anything whether it's successful or not , I am just gonna try to close it and hope it will be and 99% of time its going to be , I could catch errors and some of problems for some reasons closing and having problems but the best we can do is just try to close and see what happens
+        dismiss(animated: true){
+            //document?.close(completionHandler: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)
+            /*
+             It does have a completionHandler but I dont really care because I am not gonna do anything whether it's successful or not , I am just gonna try to close it and hope it will be and 99% of time its going to be , I could catch errors and some of problems for some reasons closing and having problems but the best we can do is just try to close and see what happens
+             
+             */
+            
+            self.document?.close()
+            
+        }
+        
 
- */
-        document?.close()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -233,14 +240,14 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
 //    // To test our app We are going to set my document to be untitled.json eventually it would be chooser thing
 //    override func viewDidLoad() {
 //        super.viewDidLoad()
-//        
-//        
+//
+//
 //        if let url = try? FileManager.default.url(
 //            for: .documentDirectory,
 //            in: .userDomainMask,
 //            appropriateFor: nil,
 //            create: true).appendingPathComponent("Untitled.json"){
-//            
+//
 //            //remember that UIDocument only has 1 initializer that is url
 //            document = EmojiArtDocument(fileURL: url)
 //        }
