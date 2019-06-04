@@ -18,7 +18,9 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         delegate = self
         
         allowsDocumentCreation = true
-        allowsPickingMultipleItems = false
+        
+        //Because we only know showing of 1 emojiArtDocument at a time
+      //  allowsPickingMultipleItems = false
         
         // Update the style of the UIDocumentBrowserViewController
         // browserUserInterfaceStyle = .dark
@@ -26,26 +28,58 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         
         // Specify the allowed content types of your application via the Info.plist.
         
-        // Do any additional setup after loading the view.
+        
+        
+        /*
+        This time not in document Directory
+        I dnt want it on documents when the user looks there
+         I am gonna put it in applicationSupportDirectory
+         applicationSupportDirectory is a great place to put things that are kinda a behind the scenes, they are permanent , I want this template to stick around , I dont want it to cached and deleted
+         Although I can put it in caches because I can always recreate it in viewDidLoad
+    */
+       template = try? FileManager.default.url(
+        for: .applicationSupportDirectory,
+        in: .userDomainMask,
+        appropriateFor: nil,
+        create: true).appendingPathComponent("Untitled.json")
+        
+        if template != nil {
+            
+            /*
+             createFile is a nice way to create a file because it doesnt throw or anything like that and it returns a boolean whether that file either got created or already exist
+             And  if it is true then I will allow document creation
+             Otherwise I wouldnt allow document creation because I couldnt create the template
+             Now this importHandler(template, .copy) passing in template and copy it in applicationDirectory
+             
+             Data() creates a blank document
+ */
+            allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+        }
+        
     }
     
+    //make this template to point to some blank document
+    var template : URL?
     
     // MARK: UIDocumentBrowserViewControllerDelegate
     //Used for handling copy of template
+    //Give me the url of document because someone whats to create one
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didRequestDocumentCreationWithHandler importHandler: @escaping (URL?, UIDocumentBrowserViewController.ImportMode) -> Void) {
-        let newDocumentURL: URL? = nil
         
-        // Set the URL for the new document here. Optionally, you can present a template chooser before calling the importHandler.
-        // Make sure the importHandler is always called, even if the user cancels the creation request.
-        if newDocumentURL != nil {
-            importHandler(newDocumentURL, .move)
-        } else {
-            importHandler(nil, .none)
-        }
+        importHandler(template, .copy)
     }
     
     
-    /* not implementing below 3 funcs */
+    /* not implementing below 3 funcs
+     didPickDocumentsAt  when people click on document
+     didImportDocumentAt  when some other app click Files app ask's you to open documents
+     
+     both are doing same presentDocument() which is please put up your ViewController to show it
+     
+     failedToImportDocumentAt called when you couldnt open document
+     you should put up an alert here
+     
+     */
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         guard let sourceURL = documentURLs.first else { return }
         
@@ -69,7 +103,32 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     func presentDocument(at documentURL: URL) {
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-
+        
+        /*
+         The viewcontroller I wanna present is actually not EmojiArtViewController its the navigation controller its in
+         So I have to somehow instiate navigation Controller which will also bring EmojiArtViewController in
+         
+         So we have to give NavigationController a identifier in Storyboard 
+        */
+        
+        let documentVC = storyBoard.instantiateViewController(withIdentifier: "DocumentMVC")
+        
+        //.content is in utility extension for UIVC for checking naavigationController and returning VC
+        if let emojiArtViewController = documentVC.contents as? EmojiArtViewController{
+            
+            //URL that we want to present
+            emojiArtViewController.document = EmojiArtDocument(fileURL: documentURL)
+            
+        }
+        
+        
+        //when someone clicked on it in file browser we want to slide up instead of just appear i.e. slide up from bottom
+        //There is even a way to make it grow out of icon in file system (***)
+        present(documentVC,animated: true)
+        
+        //But this documentMVC has a emojiArtViewController that we need to set document of
+        //Then in target -> Info changing Document type from images to json
+        
     }
 }
 
