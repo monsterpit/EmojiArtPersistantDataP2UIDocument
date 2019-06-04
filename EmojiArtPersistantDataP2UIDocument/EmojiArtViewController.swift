@@ -125,82 +125,126 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
     
     //what's inside emojiArt document there's URL in the background and then there are all those emoji what they are where they are and how big they are that's what emojiArt document looks like 
     
+    //This is going to be set in that code from the file chooser when the file chooser chooses the file we are gonna set our document in our new MVC and then its just gonna magicalaly show its stuff using all the document API
+    var document : EmojiArtDocument?
 
-    @IBAction func save(_ sender: UIBarButtonItem) {
+    @IBAction func save(_ sender: UIBarButtonItem? = nil) {
+
+        //we actually dont really do save we do autosave
+        /*
+         So how do we do autosave the only thing that's important with autosave is that you tell the UIDocument that something is saved otherwise it's not going to waste its time AutoSaving something that hasnt changed and you do that by
+         first telling the document to look at your model
+         and then you tell your document that a change has happened
+ */
         
-        //emojiArt?.json its a data though
-        if let json = emojiArt?.json{
-            
-            //when you have data and you have to print it has a string you have to tell the system what the encoding is... like ascii , unicode
-//            // but JSON is always utf8  (unicode 8 bit encoding )
-//            if let jsonString = String(data: json, encoding: .utf8){
-//
-//                print(jsonString)
-//
-//            }
-            
-          
-            /*
-             Anytime you are talking about fileSystem
-             1) thing you have to do is find the directory in the sandbox to start , you always do it , when gonna write something in file system or read from file system you got to figure out which sandbox directory you are starting
-             
-             So this is the document so I am gonna put it in my document directory
-             
-             */
-            if let url = try? FileManager.default.url(
-                for: .documentDirectory,   // we are looking for document directory
-                in: .userDomainMask,       // we always do userDomainMask
-                appropriateFor: nil,       // we are not replacing file so we dont care about that
-                create: true               // and we want to create a document directory if it hasnt
-            ).appendingPathComponent("Untitled.json") // appending name of file to directory location
-            {
-                
-                do{
-                  //what URL we gonna write it to and this throws
-                try json.write(to: url)
-                     print ("Saved successfully")
-                    
-                }catch let error{
-                    print ("couldnt save \(error)")
-                }
-                
-            }
-            
-           
-            
-            
+        
+        document?.emojiArt = emojiArt
+        
+       if document?.emojiArt != nil{
+        //Ths done can be undo redo or done
+        document?.updateChangeCount(.done)
+        //We are not talking about undoManager so I cant show you that but the other option is to use done because meaning the change is done
         }
+        
+        
+        /*
+         Now this is strange that we are saying and noting that our document changed because the user pressed the Save button , that is weird
+         Really we should know when its changed when anything changes
+         Someone dragged out another emoji they resized it , they put a different background URL that's when we should save
+         And really this method shouldnt even be called save it should be called documentChanged
+         (***)Document Change tracking isnt put
+         But its an interesting thing because that's being tracked in your view
+         Well view is what knows when we have resized something or dragged something in so our view needs to talk back to our controller and say hey something changed
+         well it cant talk back to our controller expect for blind and structured
+         So how do we talk back from our view to controller to tell hey this document has changed ?
+         Lets try delegation the same way the tableView talks back to its controller it is a delegation
+         ScrollView it uses delegation that's how we would have to do it
+         So we would have to set up our own delegation where we have our emojiArtViewDelegate
+         That's what we would
+         
+         I dont want you get the idea to have save button in document apps
+         you should never have a save button , it should know when things change and just call this updateChangeCount to autosave it
+         
+         
+         Since we dont have that we will have our save button and we will just tell it when it saves
+         
+         
+         
+         
+         How about closing our document ???
+         Right now we have only 1 document untitled.json but we are just about to add a file chooser taht's lets us choose lots of different documents
+         
+         So we need a way to close this document so we can open another document
+         So we gonna go back and add a close button to our UI
+ 
+ */
         
     }
     
+    @IBAction func close(_ sender: UIBarButtonItem) {
+        
+        /*
+         The other thing we are gonna do is We will save because we dont have automatic changed tracking I wanna save before I close
+         If I had automatic changed tracking I wouldnt do save here I would just delete line of code for save
+         
+         Notice I did save with no arguments because save takes a bar button item and I dont have one
+         here's a cool trick I  am gonna make
+         
+           @IBAction func close(_ sender: UIBarButtonItem)
+         To
+         @IBAction func close(_ sender: UIBarButtonItem? = nil )
+         
+         by doing that now I can call save with nothing and it defaults to nil and I dont use this bar button item in here so all is well 58.13 L14
+         
+         
+ */
+        
+        save()
+        
+        
+        //document?.close(completionHandler: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)
+        /*
+ It does have a completionHandler but I dont really care because I am not gonna do anything whether it's successful or not , I am just gonna try to close it and hope it will be and 99% of time its going to be , I could catch errors and some of problems for some reasons closing and having problems but the best we can do is just try to close and see what happens
+
+ */
+        document?.close()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
-        // We just have to get that URL for the untitled.json and look at the data and then turn it back into EmojiArt and set that as our model
-        
-        if let url = try? FileManager.default.url(
-            for: .documentDirectory,   // we are looking for document directory
-            in: .userDomainMask,       // we always do userDomainMask
-            appropriateFor: nil,       // we are not replacing file so we dont care about that
-            create: true               // and we want to create a document directory if it hasnt
-            ).appendingPathComponent("Untitled.json") // appending name of file to directory location
-        {
+       
+       //  When our view first appears we need to open our document so
+        document?.open(completionHandler: { (success) in
             
-            //exactly same as we did for getting data from http URL
-            if let jsonData = try? Data(contentsOf: url){
+            if success {
                 
-                //Now if I am able to create a data out of it , now I have to create an EmojiArt from it and set that as my model
+                //This localizedName just comes from URL its just the last part of URL without the file extension put in there
+                self.title = self.document?.localizedName
                 
-                emojiArt = EmojiArt(json : jsonData)
+                self.emojiArt = self.document?.emojiArt
                 
             }
-            
-        }
+        })
+
     }
     
     
+    // To test our app We are going to set my document to be untitled.json eventually it would be chooser thing
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        
+        if let url = try? FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true).appendingPathComponent("Untitled.json"){
+            
+            //remember that UIDocument only has 1 initializer that is url
+            document = EmojiArtDocument(fileURL: url)
+        }
+    }
     @IBOutlet weak var dropZone: UIView! {
         didSet{
             dropZone.addInteraction(UIDropInteraction(delegate: self))

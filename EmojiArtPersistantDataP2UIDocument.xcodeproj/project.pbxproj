@@ -81,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				6B926C0822A64B9A008936E0 /* EmojiArtPersistantDataP2UIDocument */,
-				6B926C1922A64BAB008936E0 /* Info.plist */,
 				6B926C0722A64B9A008936E0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,6 +105,7 @@
 				6B164D4322A65AEE00C78818 /* EmojiArtViewController.swift */,
 				6B164D4122A6512C00C78818 /* Supporting Files */,
 				6B164D5022A65B3600C78818 /* Junk */,
+				6B926C1922A64BAB008936E0 /* Info.plist */,
 			);
 			path = EmojiArtPersistantDataP2UIDocument;
 			sourceTree = "<group>";
