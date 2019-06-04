@@ -11,6 +11,7 @@ import UIKit
 
 class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocumentBrowserViewControllerDelegate {
     
+    //viewdidLoad is where we gonna configure our document
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,7 +31,7 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     
     
     // MARK: UIDocumentBrowserViewControllerDelegate
-    
+    //Used for handling copy of template
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didRequestDocumentCreationWithHandler importHandler: @escaping (URL?, UIDocumentBrowserViewController.ImportMode) -> Void) {
         let newDocumentURL: URL? = nil
         
@@ -62,13 +63,11 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     
     // MARK: Document Presentation
     
+    //This is just a internal method that is called from other things for presenting the MVC for the given URL
     func presentDocument(at documentURL: URL) {
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let documentViewController = storyBoard.instantiateViewController(withIdentifier: "DocumentViewController") as! DocumentViewController
-        documentViewController.document = Document(fileURL: documentURL)
-        
-        present(documentViewController, animated: true, completion: nil)
+
     }
 }
 

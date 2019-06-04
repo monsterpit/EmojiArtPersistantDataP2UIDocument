@@ -34,3 +34,8 @@ class DocumentViewController: UIViewController {
         }
     }
 }
+
+
+/*
+ DocumentViewController is like EmojiArtViewController its just a stub for adopting viewcontroller
+ */

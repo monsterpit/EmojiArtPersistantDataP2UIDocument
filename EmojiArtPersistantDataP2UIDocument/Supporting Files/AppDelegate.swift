@@ -41,6 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    /*
+     This is sent to your applicaation through other application like I wanna open up one of your documents
+     This is only gonna get called if we have EmojiArt Document not a JSON document
+ */
+    
     func application(_ app: UIApplication, open inputURL: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         // Ensure the URL is a file URL
         guard inputURL.isFileURL else { return false }
@@ -73,4 +78,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  I have to do is create UIDocument subclass and Implement 2 methods
  But this is where we are gonna step in and use that template
  And throw that template for document base
+ 
+ 
+ DocumentBrowserViewController that looks like the files app in iOS 11
+ and we arrive into the app there
+
+ and then there is
+ EmojiArtViewController we gonna delete default ViewController
+ 
+ Cool thing about storyboard is you can copy and paste from 1 storyboard to another
+ Because all the connection to the code are made by name
+ So only the names
+ So as long as the names are the same then both place it works
+ 
+ 
+ There's no segue over here So that's why we have to do manual presenting over here
  */
