@@ -49,7 +49,15 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
                 for: .applicationSupportDirectory,
                 in: .userDomainMask,
                 appropriateFor: nil,
-                create: true).appendingPathComponent("Untitled.json")
+                //create: true).appendingPathComponent("Untitled.json")
+                create: true).appendingPathComponent("Untitled.emojiart")
+            
+            // CHANGE MADE
+            // the above change to the name of our blank template
+            // combined with the addition of an emojiart file type
+            // in Exported UTIs in Project Settings for Target's Info tab
+            // and changing the Document Type in that tab to edu.stanford.cs193p.emojiart
+            // makes it so documents can now be opened in our app from the Files app!
             
             if template != nil {
                 
