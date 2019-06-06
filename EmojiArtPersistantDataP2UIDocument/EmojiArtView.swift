@@ -76,6 +76,8 @@ class EmojiArtView: UIView,UIDropInteractionDelegate {
             //Get all NSattributedString
             for attributedString in provider as? [NSAttributedString] ?? [] {
                 self.addLabel(with : attributedString, centeredAt : dropPoint)
+                
+                self.delegate?.emojiArtViewDidChange(self)
             }
             
         }

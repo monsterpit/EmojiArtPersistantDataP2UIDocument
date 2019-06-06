@@ -130,7 +130,15 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
       // MARK: - Document Handling
     
     var document : EmojiArtDocument?
-
+    // we no longer need a save method or button
+    // because now we are the EmojiArtView's delegate
+    // (search for "delegate = self" below)
+    // and we get notified when the EmojiArtView changes
+    // (we also note when a new image is dropped, search "documentChanged" below)
+    // and so we can just update our UIDocument's Model to match ours
+    // and tell our UIDocument that it has changed
+    // and it will autosave at the next opportune moment
+    
     //  @IBAction func save(_ sender: UIBarButtonItem? = nil) {
     func documentChanged() {
         // NO CHANGES *INSIDE* THIS METHOD WERE MADE AFTER LECTURE 14
