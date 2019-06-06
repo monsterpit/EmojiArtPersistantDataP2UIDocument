@@ -175,11 +175,6 @@
                                 <action selector="close:" destination="gKu-yT-4bt" id="R52-7b-tJh"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="7ir-IF-5im">
-                            <connections>
-                                <action selector="save:" destination="gKu-yT-4bt" id="q8q-aj-u1I"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="dropZone" destination="xKD-vZ-NnP" id="kPo-uB-GSz"/>

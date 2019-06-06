@@ -46,7 +46,7 @@ extension EmojiArt.EmojiInfo{
 }
 
 
-class EmojiArtViewController: UIViewController,UIDropInteractionDelegate,UIScrollViewDelegate , UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout , UICollectionViewDragDelegate,UICollectionViewDropDelegate{
+class EmojiArtViewController: UIViewController,UIDropInteractionDelegate,UIScrollViewDelegate , UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout , UICollectionViewDragDelegate,UICollectionViewDropDelegate , EmojiArtViewDelegate{
 
     //MARK: - Model
     
@@ -126,80 +126,36 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
     //what's inside emojiArt document there's URL in the background and then there are all those emoji what they are where they are and how big they are that's what emojiArt document looks like 
     
     //This is going to be set in that code from the file chooser when the file chooser chooses the file we are gonna set our document in our new MVC and then its just gonna magicalaly show its stuff using all the document API
+    
+      // MARK: - Document Handling
+    
     var document : EmojiArtDocument?
 
-    @IBAction func save(_ sender: UIBarButtonItem? = nil) {
-
-        //we actually dont really do save we do autosave
-        /*
-         So how do we do autosave the only thing that's important with autosave is that you tell the UIDocument that something is saved otherwise it's not going to waste its time AutoSaving something that hasnt changed and you do that by
-         first telling the document to look at your model
-         and then you tell your document that a change has happened
- */
+    //  @IBAction func save(_ sender: UIBarButtonItem? = nil) {
+    func documentChanged() {
+        // NO CHANGES *INSIDE* THIS METHOD WERE MADE AFTER LECTURE 14
+        // JUST ITS NAME WAS CHANGED (FROM save TO documentChanged)
         
-        
+        // update the document's Model to match ours
         document?.emojiArt = emojiArt
-        
-       if document?.emojiArt != nil{
-        //Ths done can be undo redo or done
-        document?.updateChangeCount(.done)
-        //We are not talking about undoManager so I cant show you that but the other option is to use done because meaning the change is done
+        // then tell the document that something has changed
+        // so it will autosave at next best opportunity
+        if document?.emojiArt != nil {
+            document?.updateChangeCount(.done)
         }
-        
-        
-        /*
-         Now this is strange that we are saying and noting that our document changed because the user pressed the Save button , that is weird
-         Really we should know when its changed when anything changes
-         Someone dragged out another emoji they resized it , they put a different background URL that's when we should save
-         And really this method shouldnt even be called save it should be called documentChanged
-         (***)Document Change tracking isnt put
-         But its an interesting thing because that's being tracked in your view
-         Well view is what knows when we have resized something or dragged something in so our view needs to talk back to our controller and say hey something changed
-         well it cant talk back to our controller expect for blind and structured
-         So how do we talk back from our view to controller to tell hey this document has changed ?
-         Lets try delegation the same way the tableView talks back to its controller it is a delegation
-         ScrollView it uses delegation that's how we would have to do it
-         So we would have to set up our own delegation where we have our emojiArtViewDelegate
-         That's what we would
-         
-         I dont want you get the idea to have save button in document apps
-         you should never have a save button , it should know when things change and just call this updateChangeCount to autosave it
-         
-         
-         Since we dont have that we will have our save button and we will just tell it when it saves
-         
-         
-         
-         
-         How about closing our document ???
-         Right now we have only 1 document untitled.json but we are just about to add a file chooser taht's lets us choose lots of different documents
-         
-         So we need a way to close this document so we can open another document
-         So we gonna go back and add a close button to our UI
- 
- */
-        
     }
     
     @IBAction func close(_ sender: UIBarButtonItem) {
         
-        /*
-         The other thing we are gonna do is We will save because we dont have automatic changed tracking I wanna save before I close
-         If I had automatic changed tracking I wouldnt do save here I would just delete line of code for save
-         
-         Notice I did save with no arguments because save takes a bar button item and I dont have one
-         here's a cool trick I  am gonna make
-         
-           @IBAction func close(_ sender: UIBarButtonItem)
-         To
-         @IBAction func close(_ sender: UIBarButtonItem? = nil )
-         
-         by doing that now I can call save with nothing and it defaults to nil and I dont use this bar button item in here so all is well 58.13 L14
-         
-         
- */
-        
-        save()
+        // the call to save() that used to be here has been removed
+        // because we no longer explicitly save our document
+        // we just mark that it has been changed
+        // and since we are reliably doing that now
+        // we don't need to try to save it when we close it
+        // UIDocument will automatically autosave when we close()
+        // if it has any unsaved changes
+        // the rest of this method is unchanged from previous
+       // save()
         
         //utility
         if document?.emojiArt != nil{
@@ -277,7 +233,18 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
     @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
     
     
-    var emojiArtView = EmojiArtView()
+    // when we create our EmojiArtView, we also set ourself as its delegate
+    // so that we can get emojiArtViewDidChange messages sent to us
+    lazy var emojiArtView : EmojiArtView = {
+        let eav = EmojiArtView()
+        eav.delegate = self
+        return eav
+    }()
+    
+    func emojiArtViewDidChange(_ sender: EmojiArtView) {
+        documentChanged()
+    }
+    
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         scrollViewWidth.constant = scrollView.contentSize.width
@@ -343,6 +310,13 @@ and any time someone sets my model I am gonna go update my UI to be like that wa
                  So I am always gonna set them together
                  */
                 self.emojiArtBackImage = (url,image)
+                
+                // in addition to emoji being added in our EmojiArtView
+                // causing our document to change
+                // whenever a new background image is dropped
+                // our document changes as well
+                // so we note that
+                self.documentChanged()
             }
         }
         
