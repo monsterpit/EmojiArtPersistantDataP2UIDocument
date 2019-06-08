@@ -1,0 +1,160 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\qc\partightenfactor0
+
+\f0\b\fs24 \cf0 \
+\
+UITextField\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b0 \cf0 {{\NeXTGraphic Screen Shot 2019-05-19 at 10.30.47 PM.png \width14620 \height7680 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\
+
+\b \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b0 \cf0 UITextField its lot like UILabel and you might just think it's just an editable UILabel it's little more complicated than that but not much more \
+One thing to think about conceptually UITextFied is having editable textfield especially on iPhone if not a very good UI , Its really easy to fall in the trap throwing TextField into UI  and thinking this is very good UI element for doing this because you are running it in simulator and you got a keyboard and you are just typing it away in those textField and hitting return and go to the next \
+Whereas as poor user's are like my thumb's sparked another damn textField I hate them \
+Okay so it's not a primary input source if you can find a way to let them choose from a list or otherwise input the data  without having to type things it's better \
+Okay now on iPad it's not so bad atleast the keyboard is quite large it's much more accessible people can put it down and  use 2 hands , So it's quite not bad in iPad but on an iPhone dont get fooled \
+So think from users perspective whether a textfield or not \
+once you have decided you want a textfield here's how it works \
+\
+So TextFiled is something obviously throws a keyboard up and lets you enter text \
+One thing to notice about the keyboard is there's no keyboard object or anything or anywhere in iOS\
+So keyboards coming up happens because an object becomes the first responder \
+So first responder is the thing that gets the keyboard events from the keyboard as soon as  something becomes the first responder it starts getting keyboard will appear \
+So become first responder is a method you can send to textField and it will cause it to be the first responder which will cause the keyboard to come up \
+\
+and similarly if you send resign for responder it will stop being first responder and the keyboard will go away so that is how you make the keyboard come 
+\b and\
+ go in iOS is by making thing become and resign  first responder
+\b0 \
+This is important to understand about keyboards \
+\
+One thing about textField that is totally different from label is that it has a delegate and that's its delegate is the primary way you interact with the textField \
+As opposed to label , label doesnt have even have a delegate you asked for  its text and set its value and that's it\
+Since TextField is editable as thing like a selection changing or someone type something new you can find out about all of those things  going on\
+e.g. A lot of times when a keyboard when the user hits the return key in the keyboard you want the keyboard to go away \
+So TextField should return right there is a method that gets called when the return key is pressed and inside there you very likely want to say resign first responder and that will cause the keyboard to go away \
+So that's an example what you do with the delegate\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2019-05-19 at 10.30.55 PM.png \width14560 \height5720 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+Another really important delegate of textField is textFieldDidEndEditing(sender:)\
+This gets called when it resigns first responder\
+So if someone is editing in your textfield and they type on it and touch on another textField you will resign first responder\
+So if you want to look at text at that point you are gonna want to implement this delegate method\
+\
+Now having said that 
+\b textField is a UIControl So it does have target action 
+\b0 \
+You can control drag it and have it send certain target action messages on certain activities happening in the textField and sometime people hook it up that way without doing the delegate thing \
+But kinda need to know this delegate because you need to know what's it capable of doing\
+So you definitely want to look up UITextField delegate protocol and see what are all things you can find out about what's happening when editing in the TextField\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2019-05-19 at 10.31.02 PM.png \width14340 \height7220 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+
+\b \cf0 Keyboard \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b0 \cf0 \
+Since there is no keyboard object in iOS \
+What if you want to configure the keyboard like set whether it does autocorrect , right you know how it does all annoying autocorrect \
+It does a autocorrect and you dont want it to do that because it doesnt make sense in your textField you couldnt turn that off \
+But you do that all by talking to the textField not by talking to the keyboard anybody who puts up the keyboard is going to implement this protocol called\
+
+\b UITextInputTrait
+\b0  and it has 
+\b all this keyboard activities 
+\b0 and its that guys responsibility to get the keyboard to do the right thing \
+\
+Keyboard also has in 
+\b UITextInputTrait protocol
+\b0  it also has
+\b  inputAccessoryView 
+\b0 which lets you put a little View in the keyboard the top of the keyboard so you had  some special buttons or something you want you can put them in there so that's  kind of cool \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2019-05-19 at 10.31.10 PM.png \width14760 \height8160 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+
+\b It's important to understand when keyboard comes up its covers your views, 
+\b0 \
+
+\b Keyboard doesn't move things out of the way normally it comes up 
+\b0 \
+
+\b Now there are some classes like UITableViewController bundle right the thing you can drag out and get a whole UITableViewController with the tableView that does that will scroll things up out of the way of the keyboard\
+But normally keyboard   just comes up and tears stuff behind it
+\b0 \
+\
+In NSAlert WE will discuss how to find out if keyboard has come up and  where it has come up and then you can react by moving the UI out of the way hopefully by scrolling it in scroll View but you have to do in some other way \
+\
+\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2019-05-19 at 10.31.20 PM.png \width15320 \height7240 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+ There's lot of stuff in TextField that you have to look in documentation for \
+You have already seen like autoshrink of UILabel \
+TextField also have that as well  and you can control it by setting the minimum font size and stuff like that you know when you click in the textField\
+  you want to clear out the text that used to be in there and start fresh  or do you want to leave the textField that used to be in there those kind of things  you can do all that it that some 
+\b little accessory
+\b0  music you put on the left and right it's pretty powerful little object  \
+ \
+}
